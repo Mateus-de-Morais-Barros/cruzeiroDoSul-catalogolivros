@@ -6,7 +6,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Set;
 
 @Controller
 @RequestMapping("/livros")
@@ -56,9 +58,11 @@ public class LivroController {
 
     @GetMapping("/buscar")
     public String buscar(@RequestParam String termo, Model model) {
-        List<Livro> resultados = livroRepository.findByTituloContainingIgnoreCase(termo);
+        Set<Livro> resultados = new LinkedHashSet<>();
+        resultados.addAll(livroRepository.findByTituloContainingIgnoreCase(termo));
         resultados.addAll(livroRepository.findByAutorContainingIgnoreCase(termo));
         model.addAttribute("livros", resultados);
         return "listagem";
     }
+
 }
